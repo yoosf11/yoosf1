@@ -40,7 +40,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     errorEl.textContent = currentLang === 'ar' ? "جاري التحقق..." : "Verifying...";
 
     const { data, error } = await db.rpc('login_user', { p_username: username, p_password: password });
-    const user = data && data.length ? data[0] : null;
+   const user = data && data.user ? data.user : null;
 
     if (error || !user) {
         errorEl.textContent = currentLang === 'ar' ? "خطأ في اسم المستخدم أو كلمة المرور!" : "Invalid credentials!";
