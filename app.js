@@ -224,17 +224,17 @@ document.getElementById('addUserForm').addEventListener('submit', async (e) => {
         const checkboxes = document.querySelectorAll('.permissions-check input:checked');
         selectedPerms = Array.from(checkboxes).map(cb => cb.value);
     }
+    p_ad
+const { data, error } = await db.rpc('admin_add_user', {
+    p_admin: currentUserUsername,
+    p_pass: currentPassword,
+    p_permissions: selectedPerms,
+    p_username: username,
+    p_full_name: fullName,
+    p_new_password: password
+});
 
-    const { data: ok, error } = await db.rpc('admin_add_user', {
-        p_admin: currentUser.username,
-        p_pass: currentPassword,
-        p_username: username,
-        p_full_name: fullName,
-        p_password: password,
-        p_permissions: selectedPerms
-    });
-
-    if (!error && ok) {
+    if (!error && data?.success) {
         alert("تمت إضافة المستخدم بنجاح!");
         document.getElementById('addUserForm').reset();
         loadUsers();
