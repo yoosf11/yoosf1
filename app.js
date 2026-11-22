@@ -224,7 +224,6 @@ document.getElementById('addUserForm').addEventListener('submit', async (e) => {
         const checkboxes = document.querySelectorAll('.permissions-check input:checked');
         selectedPerms = Array.from(checkboxes).map(cb => cb.value);
     }
-    p_ad
 const { data, error } = await db.rpc('admin_add_user', {
     p_admin: currentUserUsername,
     p_pass: currentPassword,
