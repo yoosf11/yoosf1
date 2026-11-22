@@ -95,9 +95,8 @@ async function markAttendance() {
             p_location: coords
         });
 
-        const status = !error && data ? data.status : 'error';
-
-        if (status === 'ok') {
+const isSuccess = data && data.success;
+        if (isSuccess) {
             statusEl.style.color = "green";
             statusEl.textContent = `✅ تم تسجيل حضورك بنجاح في مادة تفكير ابتكاري يوم ${data.day} الساعة ${data.time}`;
         } else if (status === 'duplicate') {
