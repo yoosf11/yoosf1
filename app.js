@@ -40,7 +40,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     errorEl.textContent = currentLang === 'ar' ? "جاري التحقق..." : "Verifying...";
 
     const { data, error } = await db.rpc('login_user', { p_username: username, p_password: password });
-   const user = data && data.user ? data.user : null;
+    const user = data && data.user ? data.user : null;
 
     if (error || !user) {
         errorEl.textContent = currentLang === 'ar' ? "خطأ في اسم المستخدم أو كلمة المرور!" : "Invalid credentials!";
@@ -95,7 +95,10 @@ async function markAttendance() {
             p_location: coords
         });
 
-const isSuccess = data && data.success;
+        const isSuccess = data && data.success;
+        // كان المتغير status غير معرّف، فاتعرّف هنا
+        const status = data && (data.status || data.error || data.reason);
+
         if (isSuccess) {
             statusEl.style.color = "green";
             statusEl.textContent = `✅ تم تسجيل حضورك بنجاح في مادة تفكير ابتكاري يوم ${data.day} الساعة ${data.time}`;
@@ -224,21 +227,23 @@ document.getElementById('addUserForm').addEventListener('submit', async (e) => {
         const checkboxes = document.querySelectorAll('.permissions-check input:checked');
         selectedPerms = Array.from(checkboxes).map(cb => cb.value);
     }
-const { data, error } = await db.rpc('admin_add_user', {
-    p_admin: currentUserUsername,
-    p_pass: currentPassword,
-    p_permissions: selectedPerms,
-    p_username: username,
-    p_full_name: fullName,
-    p_new_password: password
-});
+
+    const { data, error } = await db.rpc('admin_add_user', {
+        p_admin: currentUser.username,   // كان currentUserUsername (غير معرّف)
+        p_pass: currentPassword,
+        p_permissions: selectedPerms,
+        p_username: username,
+        p_full_name: fullName,
+        p_new_password: password
+    });
 
     if (!error && data?.success) {
         alert("تمت إضافة المستخدم بنجاح!");
         document.getElementById('addUserForm').reset();
         loadUsers();
     } else {
-        alert("خطأ: اسم المستخدم مستخدم بالفعل.");
+        console.error(error || data);
+        alert("خطأ: " + (error?.message || data?.error || "اسم المستخدم مستخدم بالفعل."));
     }
 });
 
